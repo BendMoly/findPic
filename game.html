@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+	<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+	<div id="loading">loading...</div>
+	<div id="time">剩余时间：60秒</div>
+	<div id="fen">分数：0</div>
+	<button id="btn">开始</button>
+	<div id="wrap">
+		<img src="images/2.png" alt="">
+	</div>
+
+<script>
+	var time = document.getElementById('time');
+	var fen = document.getElementById('fen');
+	var btn = document.getElementById('btn');
+	var wrap = document.getElementById('wrap');
+	var loading = document.getElementById('loading');
+	var startbol = false;
+	var index = 1;
+	var indexC = 1;
+	var f = 0;
+	var color = ["red","green","blue","yellow"];
+	var Icolor = 0;
+	loadFn();
+	function loadFn(){
+		var arr = ["images/1.png","images/2.png"];
+		for (var i = 0; i < arr.length; i++) {
+			var img = new Image();
+			img.src = arr[0];
+			img.onload = function(){
+				indexC ++;
+				if (indexC == arr.length) {
+					loading.style.display = "none";
+				}
+			}
+		}
+	}
+	btn.onclick = function(){
+		if (startbol) {return}
+		startbol = true;
+		timeFn();
+		createFn();
+		// rpl();
+	}
+	function createFn(){
+		for (var i = 0; i < wrap.children.length; i++) {
+			wrap.removeChild(wrap.children[0]);
+			i --;
+		}
+		wrap.style.paddingBottom = "5px";
+		index ++;
+		if (index > 6) {
+			index = 6;
+		}
+		// var  rnd = Math.floor(Math.random()*coloc.length);
+		Icolor ++;
+		if (Icolor > color.length) {
+			Icolor = 0;
+		}
+		for (var i = 0; i < index*index; i++) {
+			var img = document.createElement("img");
+			img.src = "images/1.png";
+			var w = (wrap.clientWidth-(index+1)*5)/index;
+			img.style.width = w + "px";
+			img.style.marginLeft = "5px";
+			img.style.marginTop = "5px";
+			img.style.background = color[Icolor];
+			wrap.appendChild(img);
+		}
+		rpl();
+	}
+	function timeFn(){
+		var n = 60;
+		var timer = setInterval(function(){
+			n -= 0.02;
+			if (n < 0) {
+				clearInterval(timer);
+				n = 0;
+				startbol = false;
+			}
+			time.innerHTML = "剩余时间:" + n.toFixed(2) + "秒";
+		}, 20)
+	}
+
+	function rpl(){
+		var rnd = Math.floor(Math.random()*wrap.children.length);
+		wrap.children[rnd].src = "images/2.png";
+		// wrap.children[rnd].onclick = function(){
+		// 	if (startbol == false) {return;}
+		// 	f += 10;
+		// 	fen.innerHTML = "分数:" + f;
+		// 	createFn();
+		// }
+
+		wrap.children[rnd].addEventListener("touchstart", function(){
+			if (startbol == false) {return;}
+			f += 10;
+			fen.innerHTML = "分数:" + f;
+			createFn();
+		}, false);
+
+	}
+</script>
+</body>
+</html>
